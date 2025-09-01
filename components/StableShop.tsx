@@ -132,7 +132,7 @@ export default function StableShop() {
       </section>
 
       {/* Products Section */}
-      <section className="px-4 pb-32">
+      <section className="px-4 pb-24">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
             <h3 className="text-xl md:text-2xl font-bold mb-2">Tous nos produits</h3>
@@ -243,8 +243,8 @@ export default function StableShop() {
       </section>
 
       {/* Navigation Bottom fixe */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-white/10 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+      <nav className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-xl border-t border-white/10 z-40">
+        <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex justify-center items-center space-x-12 sm:space-x-16 md:space-x-20">
             {/* Accueil */}
             <a 
