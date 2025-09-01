@@ -1300,6 +1300,7 @@ export default function AdminDashboard() {
 function ProductFormModal({ product, categories, onClose, onSave }: any) {
   const [formData, setFormData] = useState({
     name: product?.name || '',
+    origin: product?.origin || '',
     price: product?.price || 0,
     pricing: product?.pricing || [],
     category: product?.category || 'weed',
@@ -1308,6 +1309,10 @@ function ProductFormModal({ product, categories, onClose, onSave }: any) {
     description: product?.description || '',
     image: product?.image || '',
     video: product?.video || '',
+    quantity: product?.quantity || 0,
+    country: product?.country || 'FR',
+    countryFlag: product?.countryFlag || '🇫🇷',
+    available: product?.available !== false
   });
 
   const [pricingOptions, setPricingOptions] = useState(
@@ -1495,6 +1500,88 @@ function ProductFormModal({ product, categories, onClose, onSave }: any) {
                 className="w-full bg-white text-black px-4 py-3 rounded-lg border-2 border-black font-bold"
                 rows={4}
               />
+            </div>
+
+            {/* Champs additionnels */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-white font-black text-sm mb-2">
+                  🌍 ORIGINE
+                </label>
+                <input
+                  type="text"
+                  placeholder="Ex: Espagne, Canada..."
+                  value={formData.origin}
+                  onChange={(e) => setFormData({ ...formData, origin: e.target.value })}
+                  className="w-full bg-white text-black px-4 py-3 rounded-lg border-2 border-black font-bold"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-white font-black text-sm mb-2">
+                  📦 STOCK
+                </label>
+                <input
+                  type="number"
+                  placeholder="Ex: 50"
+                  value={formData.quantity}
+                  onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 0 })}
+                  className="w-full bg-white text-black px-4 py-3 rounded-lg border-2 border-black font-bold"
+                  min="0"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-white font-black text-sm mb-2">
+                  🏴 PAYS
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="🇫🇷"
+                    value={formData.countryFlag}
+                    onChange={(e) => setFormData({ ...formData, countryFlag: e.target.value })}
+                    className="w-16 bg-white text-black px-2 py-3 rounded-lg border-2 border-black font-bold text-center"
+                    maxLength={2}
+                  />
+                  <input
+                    type="text"
+                    placeholder="FR"
+                    value={formData.country}
+                    onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                    className="flex-1 bg-white text-black px-4 py-3 rounded-lg border-2 border-black font-bold"
+                    maxLength={3}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-white font-black text-sm mb-2">
+                ✅ DISPONIBILITÉ
+              </label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="available"
+                    checked={formData.available}
+                    onChange={() => setFormData({ ...formData, available: true })}
+                    className="w-4 h-4"
+                  />
+                  <span>Disponible</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="available"
+                    checked={!formData.available}
+                    onChange={() => setFormData({ ...formData, available: false })}
+                    className="w-4 h-4"
+                  />
+                  <span>Indisponible</span>
+                </label>
+              </div>
             </div>
 
             {/* Pricing Options */}
