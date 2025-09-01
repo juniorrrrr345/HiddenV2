@@ -99,9 +99,9 @@ export default function StableShop() {
       </header>
 
       {/* Image bannière EN HAUT des catégories */}
-      <section className="px-3 sm:px-4 pb-4">
-        <div className="max-w-7xl mx-auto">
-          {settings.bannerImage ? (
+      {settings.bannerImage && (
+        <section className="px-3 sm:px-4 pb-4">
+          <div className="max-w-7xl mx-auto">
             <div className="relative rounded-xl sm:rounded-2xl overflow-hidden">
               <img 
                 src={settings.bannerImage}
@@ -110,13 +110,9 @@ export default function StableShop() {
               />
               <div className="absolute inset-0 bg-black/20"></div>
             </div>
-          ) : (
-            <div className="bg-gray-800/50 rounded-xl p-8 text-center border-2 border-dashed border-gray-600">
-              <p className="text-gray-400">Image bannière - Uploadez dans le panel admin</p>
-            </div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* Catégories - APRÈS l'image bannière */}
       <section className="px-4 pb-6">
