@@ -101,21 +101,9 @@ export default function StableShop() {
       {/* Bannière d'accueil */}
       <section className="pb-6 px-3 sm:px-4">
         <div className="max-w-7xl mx-auto">
-          {/* Texte de présentation */}
-          {settings.presentationText && (
-            <div className="text-center mb-6">
-              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2">
-                BANNIÈRE D'ACCUEIL
-              </h2>
-              <p className="text-gray-300 text-sm sm:text-base">
-                {settings.presentationText}
-              </p>
-            </div>
-          )}
-          
-          {/* Image de la bannière */}
+          {/* Image de la bannière du panel admin */}
           {settings.bannerImage && (
-            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden mb-6">
+            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden">
               <img 
                 src={settings.bannerImage}
                 alt="Bannière HIDDEN SPINGFIELD"
