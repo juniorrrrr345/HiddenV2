@@ -31,6 +31,7 @@ export default function StableShop() {
         setSettings({
           shopName: settingsData.shop_title || 'HIDDEN SPINGFIELD',
           backgroundImage: settingsData.background_image,
+          bannerImage: settingsData.banner_image,
           bannerText: settingsData.scrolling_text || 'NOUVEAU DROP'
         });
       }
@@ -82,25 +83,37 @@ export default function StableShop() {
         </div>
       </header>
 
-      {/* Hero Banner adaptatif */}
+      {/* Hero Banner avec image du panel admin */}
       <section className="pt-16 sm:pt-20 pb-6 sm:pb-8 px-3 sm:px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-white/10">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-2 sm:mb-4 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent leading-tight">
-              HIDDEN SPINGFIELD
-            </h2>
-            <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-              NOUVEAU DROP
-            </h3>
-            <p className="text-gray-300 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed">
-              Découvrez nos produits premium de qualité exceptionnelle
-            </p>
-          </div>
+        <div className="max-w-7xl mx-auto">
+          {settings.bannerImage ? (
+            /* Image rectangulaire du panel admin */
+            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden">
+              <img 
+                src={settings.bannerImage}
+                alt="Banner HIDDEN SPINGFIELD"
+                className="w-full h-32 sm:h-40 md:h-48 lg:h-56 object-cover"
+              />
+              <div className="absolute inset-0 bg-black/20"></div>
+            </div>
+          ) : (
+            /* Fallback si pas d'image */
+            <div className="text-center">
+              <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-white/10">
+                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-2 sm:mb-4 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent leading-tight">
+                  HIDDEN SPINGFIELD
+                </h2>
+                <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+                  NOUVEAU DROP
+                </h3>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
       {/* Products Section */}
-      <section className="px-4 pb-24">
+      <section className="px-4 pb-32">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
             <h3 className="text-xl md:text-2xl font-bold mb-2">Nos Produits</h3>
@@ -195,42 +208,47 @@ export default function StableShop() {
         </div>
       </section>
 
-      {/* Footer avec réseaux sociaux */}
-      <footer className="bg-gray-900/50 backdrop-blur-lg border-t border-white/10 p-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col items-center space-y-4">
-            {/* Réseaux sociaux */}
-            <div className="flex items-center space-x-6">
-              <a 
-                href="https://instagram.com/" 
-                target="_blank"
-                className="flex items-center space-x-2 text-gray-400 hover:text-pink-400 transition-colors"
-              >
-                <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-sm">📷</span>
-                </div>
-                <span className="hidden sm:inline">Instagram</span>
-              </a>
-              
-              <a 
-                href="https://t.me/" 
-                target="_blank"
-                className="flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors"
-              >
-                <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-sm">✈️</span>
-                </div>
-                <span className="hidden sm:inline">Telegram</span>
-              </a>
-            </div>
+      {/* Navigation Bottom fixe */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-white/10 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex justify-center items-center space-x-8">
+            {/* Accueil */}
+            <a 
+              href="/"
+              className="flex flex-col items-center space-y-1 text-gray-400 hover:text-white transition-colors"
+            >
+              <div className="w-8 h-8 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center">
+                <span className="text-sm">🏠</span>
+              </div>
+              <span className="text-xs font-medium">Accueil</span>
+            </a>
             
-            {/* Copyright discret */}
-            <div className="text-gray-500 text-xs">
-              © 2024 {settings.shopName}
-            </div>
+            {/* Instagram */}
+            <a 
+              href="https://instagram.com/" 
+              target="_blank"
+              className="flex flex-col items-center space-y-1 text-gray-400 hover:text-pink-400 transition-colors"
+            >
+              <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white text-sm">📸</span>
+              </div>
+              <span className="text-xs font-medium">Instagram</span>
+            </a>
+            
+            {/* Telegram */}
+            <a 
+              href="https://t.me/" 
+              target="_blank"
+              className="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-400 transition-colors"
+            >
+              <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                <span className="text-white text-sm">✈️</span>
+              </div>
+              <span className="text-xs font-medium">Telegram</span>
+            </a>
           </div>
         </div>
-      </footer>
+      </nav>
     </div>
   );
 }
