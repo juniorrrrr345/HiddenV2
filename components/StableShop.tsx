@@ -53,7 +53,7 @@ export default function StableShop() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header fixe avec logo adaptatif */}
-      <header className="fixed top-0 left-0 right-0 bg-black/90 backdrop-blur-xl z-50 border-b border-white/10 h-14 sm:h-16 md:h-18">
+      <header className="fixed top-0 left-0 right-0 bg-black/50 backdrop-blur-sm z-10 border-b border-white/5 h-12 sm:h-14 md:h-16">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full">
           <div className="flex justify-between items-center h-full">
             {/* Logo seulement si image uploadée */}
@@ -96,7 +96,7 @@ export default function StableShop() {
       </section>
 
       {/* Catégories */}
-      <section className="px-4 pb-6 pt-20 sm:pt-12 md:pt-8">
+      <section className="px-4 pb-6 pt-16 sm:pt-16 md:pt-16">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-lg font-bold mb-4 text-gray-300 text-center">Catégories</h3>
           
