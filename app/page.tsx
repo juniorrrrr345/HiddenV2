@@ -1,5 +1,5 @@
-import SimpleShop from '@/components/SimpleShop';
+import ModernShop from '@/components/ModernShop';
 
 export default function Home() {
-  return <SimpleShop />;
+  return <ModernShop />;
 }
