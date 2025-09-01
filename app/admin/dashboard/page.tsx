@@ -28,8 +28,8 @@ import {
   Menu,
   ChevronRight
 } from 'lucide-react';
-import CloudinaryUpload from '@/components/CloudinaryUpload';
-import CloudinaryVideoUpload from '@/components/CloudinaryVideoUpload';
+import R2Upload from '@/components/R2Upload';
+import R2VideoUpload from '@/components/R2VideoUpload';
 import { useStore } from '@/lib/store';
 
 export default function AdminDashboard() {
@@ -718,10 +718,10 @@ export default function AdminDashboard() {
                   {settings.backgroundType === 'image' && (
                     <div>
                       <label className="block text-white font-black text-sm md:text-base mb-2 md:mb-3">IMAGE DE FOND</label>
-                      <CloudinaryUpload
-                        currentImage={settings.backgroundImage}
+                      <R2Upload
+                        currentUrl={settings.backgroundImage}
                         onUpload={(url) => setSettings({ ...settings, backgroundImage: url })}
-                        onRemove={() => setSettings({ ...settings, backgroundImage: '' })}
+                        resourceType="image"
                       />
                       <p className="text-gray-300 text-xs md:text-sm mt-2 bg-white/10 rounded-lg p-2 md:p-3">
                         💡 Cette image sera utilisée comme fond de toute la boutique
@@ -749,10 +749,10 @@ export default function AdminDashboard() {
 
                   <div>
                     <label className="block text-white font-black text-sm md:text-base mb-2 md:mb-3">IMAGE DE LA BANNIÈRE</label>
-                    <CloudinaryUpload
-                      currentImage={settings.bannerImage}
+                    <R2Upload
+                      currentUrl={settings.bannerImage}
                       onUpload={(url) => setSettings({ ...settings, bannerImage: url })}
-                      onRemove={() => setSettings({ ...settings, bannerImage: '' })}
+                      resourceType="image"
                     />
                     
                     {settings.bannerImage && (
@@ -958,10 +958,10 @@ export default function AdminDashboard() {
                   {settings.backgroundType === 'image' && (
                     <div>
                       <label className="block text-white font-bold mb-3">Image de fond</label>
-                      <CloudinaryUpload
-                        currentImage={settings.backgroundImage}
+                      <R2Upload
+                        currentUrl={settings.backgroundImage}
                         onUpload={(url) => setSettings({ ...settings, backgroundImage: url })}
-                        onRemove={() => setSettings({ ...settings, backgroundImage: '' })}
+                        resourceType="image"
                       />
                       <p className="text-gray-400 text-sm mt-3">
                         💡 L'image sera affichée en plein écran avec un overlay sombre pour la lisibilité
@@ -1391,10 +1391,10 @@ function ProductFormModal({ product, categories, onClose, onSave }: any) {
                 <label className="block text-white font-black text-lg mb-4">
                   📸 PHOTO DU PRODUIT (Carte)
                 </label>
-                <CloudinaryUpload
-                  currentImage={formData.image}
+                <R2Upload
+                  currentUrl={formData.image}
                   onUpload={(url) => setFormData({ ...formData, image: url })}
-                  onRemove={() => setFormData({ ...formData, image: '' })}
+                  resourceType="image"
                 />
                 <p className="text-gray-300 text-sm mt-2">
                   Cette image sera affichée sur la carte produit de la page d'accueil
@@ -1406,10 +1406,9 @@ function ProductFormModal({ product, categories, onClose, onSave }: any) {
                 <label className="block text-white font-black text-lg mb-4">
                   🎬 VIDÉO DU PRODUIT (Détail)
                 </label>
-                <CloudinaryVideoUpload
-                  currentVideo={formData.video}
+                <R2VideoUpload
+                  currentUrl={formData.video}
                   onUpload={(url) => setFormData({ ...formData, video: url })}
-                  onRemove={() => setFormData({ ...formData, video: '' })}
                 />
                 <p className="text-gray-300 text-sm mt-2">
                   Cette vidéo sera affichée sur la page détail du produit
