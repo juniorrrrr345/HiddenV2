@@ -156,34 +156,56 @@ export default function CartPage() {
               ))}
             </div>
 
-            {/* Total */}
+            {/* Total et Commande */}
             <div className="bg-gray-900 rounded-lg p-6">
-              <div className="flex justify-between items-center mb-4">
+              <div className="flex justify-between items-center mb-6">
                 <span className="text-xl font-bold">Total</span>
                 <span className="text-2xl font-bold text-green-400">{getTotalPrice()}€</span>
+              </div>
+              
+              <div className="text-center mb-6">
+                <p className="text-gray-400 text-sm mb-4">
+                  {cart.length} article{cart.length > 1 ? 's' : ''} dans votre panier
+                </p>
+                <h3 className="text-lg font-bold text-white mb-4">
+                  CHOISISSEZ VOTRE VENDEUR
+                </h3>
               </div>
               
               <div className="space-y-3">
                 <button 
                   onClick={() => {
-                    alert('🚀 Commande envoyée !');
+                    alert('🔥 Commande envoyée chez BURNS !');
                     clearCart();
                   }}
-                  className="w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-bold"
+                  className="w-full bg-orange-600 hover:bg-orange-700 py-3 rounded-lg font-bold text-white"
                 >
-                  🚀 Commander
+                  🔥 COMMANDER CHEZ BURNS
                 </button>
                 
                 <button 
-                  onClick={clearCart}
-                  className="w-full bg-red-600 hover:bg-red-700 py-2 rounded-lg font-bold"
+                  onClick={() => {
+                    alert('🍀 Commande envoyée chez APU !');
+                    clearCart();
+                  }}
+                  className="w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-bold text-white"
                 >
-                  🗑️ Vider le panier
+                  🍀 COMMANDER CHEZ APU
+                </button>
+                
+                <button 
+                  onClick={() => {
+                    alert('💜 Commande envoyée chez MOE !');
+                    clearCart();
+                  }}
+                  className="w-full bg-purple-600 hover:bg-purple-700 py-3 rounded-lg font-bold text-white"
+                >
+                  💜 COMMANDER CHEZ MOE
                 </button>
                 
                 <button 
                   onClick={() => router.push('/')}
-                  className="w-full bg-gray-700 hover:bg-gray-600 py-2 rounded-lg font-bold"
+                  className="w-full bg-gray-700 hover:bg-gray-600 py-2 rounded-lg font-bold mt-4"
                 >
                   ← Continuer mes achats
                 </button>
