@@ -49,7 +49,8 @@ export default function StableShop() {
           shopName: settingsData.shop_title || 'HIDDEN SPINGFIELD',
           backgroundImage: settingsData.background_image,
           bannerImage: settingsData.banner_image,
-          bannerText: settingsData.scrolling_text || 'NOUVEAU DROP'
+          bannerText: settingsData.banner_text || '',
+          presentationText: settingsData.scrolling_text || 'Découvrez nos produits premium de qualité exceptionnelle'
         });
       }
     } catch (error) {
@@ -97,14 +98,27 @@ export default function StableShop() {
         </div>
       </header>
 
-      {/* Hero Banner */}
+      {/* Bannière d'accueil */}
       <section className="pb-6 px-3 sm:px-4">
         <div className="max-w-7xl mx-auto">
+          {/* Texte de présentation */}
+          {settings.presentationText && (
+            <div className="text-center mb-6">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2">
+                BANNIÈRE D'ACCUEIL
+              </h2>
+              <p className="text-gray-300 text-sm sm:text-base">
+                {settings.presentationText}
+              </p>
+            </div>
+          )}
+          
+          {/* Image de la bannière */}
           {settings.bannerImage && (
             <div className="relative rounded-xl sm:rounded-2xl overflow-hidden mb-6">
               <img 
                 src={settings.bannerImage}
-                alt="Banner HIDDEN SPINGFIELD"
+                alt="Bannière HIDDEN SPINGFIELD"
                 className="w-full h-32 sm:h-40 md:h-48 lg:h-56 object-cover"
               />
               <div className="absolute inset-0 bg-black/20"></div>
