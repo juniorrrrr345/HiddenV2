@@ -34,6 +34,7 @@ export async function PUT(request: NextRequest) {
     
     if (body.shop_title !== undefined) { fields.push('shop_title = ?'); values.push(body.shop_title); }
     if (body.background_image !== undefined) { fields.push('background_image = ?'); values.push(body.background_image); }
+    if (body.banner_image !== undefined) { fields.push('banner_image = ?'); values.push(body.banner_image); }
     if (body.background_opacity !== undefined) { fields.push('background_opacity = ?'); values.push(body.background_opacity); }
     if (body.background_blur !== undefined) { fields.push('background_blur = ?'); values.push(body.background_blur); }
     if (body.info_content !== undefined) { fields.push('info_content = ?'); values.push(body.info_content); }
@@ -42,6 +43,9 @@ export async function PUT(request: NextRequest) {
     if (body.whatsapp_number !== undefined) { fields.push('whatsapp_number = ?'); values.push(body.whatsapp_number); }
     if (body.scrolling_text !== undefined) { fields.push('scrolling_text = ?'); values.push(body.scrolling_text); }
     if (body.theme_color !== undefined) { fields.push('theme_color = ?'); values.push(body.theme_color); }
+    if (body.burns_link !== undefined) { fields.push('burns_link = ?'); values.push(body.burns_link); }
+    if (body.apu_link !== undefined) { fields.push('apu_link = ?'); values.push(body.apu_link); }
+    if (body.moe_link !== undefined) { fields.push('moe_link = ?'); values.push(body.moe_link); }
     
     if (fields.length > 0) {
       values.push(1); // WHERE id = 1

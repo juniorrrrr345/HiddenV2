@@ -7,12 +7,34 @@ import { ArrowLeft, Plus, Minus, Trash2 } from 'lucide-react';
 export default function CartPage() {
   const router = useRouter();
   const [cart, setCart] = useState<any[]>([]);
+  const [settings, setSettings] = useState<any>({ 
+    burnsLink: '', 
+    apuLink: '', 
+    moeLink: '' 
+  });
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     loadCart();
+    loadSettings();
   }, []);
+
+  const loadSettings = async () => {
+    try {
+      const response = await fetch('/api/settings');
+      if (response.ok) {
+        const data = await response.json();
+        setSettings({
+          burnsLink: data.burns_link || '',
+          apuLink: data.apu_link || '',
+          moeLink: data.moe_link || ''
+        });
+      }
+    } catch (error) {
+      console.error('Error loading settings:', error);
+    }
+  };
 
   const loadCart = () => {
     if (typeof window !== 'undefined') {
@@ -173,35 +195,29 @@ export default function CartPage() {
               </div>
               
               <div className="space-y-3">
-                <button 
-                  onClick={() => {
-                    alert('🔥 Commande envoyée chez BURNS !');
-                    clearCart();
-                  }}
-                  className="w-full bg-orange-600 hover:bg-orange-700 py-3 rounded-lg font-bold text-white"
+                <a 
+                  href={settings.burnsLink || '#'}
+                  target="_blank"
+                  className="block w-full bg-orange-600 hover:bg-orange-700 py-3 rounded-lg font-bold text-white text-center"
                 >
                   🔥 COMMANDER CHEZ BURNS
-                </button>
+                </a>
                 
-                <button 
-                  onClick={() => {
-                    alert('🍀 Commande envoyée chez APU !');
-                    clearCart();
-                  }}
-                  className="w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-bold text-white"
+                <a 
+                  href={settings.apuLink || '#'}
+                  target="_blank"
+                  className="block w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-bold text-white text-center"
                 >
                   🍀 COMMANDER CHEZ APU
-                </button>
+                </a>
                 
-                <button 
-                  onClick={() => {
-                    alert('💜 Commande envoyée chez MOE !');
-                    clearCart();
-                  }}
-                  className="w-full bg-purple-600 hover:bg-purple-700 py-3 rounded-lg font-bold text-white"
+                <a 
+                  href={settings.moeLink || '#'}
+                  target="_blank"
+                  className="block w-full bg-purple-600 hover:bg-purple-700 py-3 rounded-lg font-bold text-white text-center"
                 >
                   💜 COMMANDER CHEZ MOE
-                </button>
+                </a>
                 
                 <button 
                   onClick={() => router.push('/')}
