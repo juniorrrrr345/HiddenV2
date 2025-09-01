@@ -177,9 +177,18 @@ export default function ModernShop() {
         <header className="fixed top-0 left-0 right-0 bg-black/60 backdrop-blur-xl z-50 border-b border-white/10">
           <div className="max-w-7xl mx-auto px-4 py-3">
             <div className="flex justify-between items-center">
-              <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                {themeSettings.shopName || 'MA BOUTIQUE'}
-              </h1>
+              {themeSettings.backgroundImage ? (
+                <img 
+                  src={themeSettings.backgroundImage} 
+                  alt="HIDDEN SPINGFIELD" 
+                  className="h-8 md:h-12 w-auto rounded-lg"
+                  style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.2))' }}
+                />
+              ) : (
+                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                  {themeSettings.shopName || 'HIDDEN SPINGFIELD'}
+                </h1>
+              )}
               
               {/* Cart Button moderne */}
               <button
