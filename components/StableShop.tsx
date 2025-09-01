@@ -69,43 +69,39 @@ export default function StableShop() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header fixe avec logo adaptatif */}
-      <header className="fixed top-0 left-0 right-0 bg-black/50 backdrop-blur-sm z-10 border-b border-white/5 h-12 sm:h-14 md:h-16">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full">
-          <div className="flex justify-between items-center h-full">
-            {/* Logo seulement si image uploadée */}
-            <div className="flex-1 flex justify-start items-center">
-              {settings.backgroundImage && (
-                <img 
-                  src={settings.backgroundImage} 
-                  alt="HIDDEN SPINGFIELD" 
-                  className="h-6 sm:h-8 md:h-10 lg:h-12 w-auto max-w-[60vw] object-contain rounded-lg"
-                  style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.2))' }}
-                />
+      {/* Header simple en haut */}
+      <header className="bg-black/80 p-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          {/* Logo seulement si image uploadée */}
+          {settings.backgroundImage && (
+            <img 
+              src={settings.backgroundImage} 
+              alt="HIDDEN SPINGFIELD" 
+              className="h-8 sm:h-10 md:h-12 w-auto object-contain rounded-lg"
+              style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.2))' }}
+            />
+          )}
+          
+          {/* Cart Button */}
+          <a href="/cart" className="relative">
+            <div className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-full transition-all">
+              <ShoppingBag size={18} />
+              <span className="hidden sm:inline font-medium">Panier</span>
+              {cartCount > 0 && (
+                <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {cartCount}
+                </span>
               )}
             </div>
-            
-            {/* Cart Button adaptatif */}
-            <a href="/cart" className="relative group flex-shrink-0">
-              <div className="flex items-center gap-1 sm:gap-2 bg-white/10 hover:bg-white/20 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full transition-all backdrop-blur">
-                <ShoppingBag size={16} className="sm:w-5 sm:h-5" />
-                <span className="hidden sm:inline font-medium text-sm">Panier</span>
-                {cartCount > 0 && (
-                  <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                    {cartCount}
-                  </span>
-                )}
-              </div>
-            </a>
-          </div>
+          </a>
         </div>
       </header>
 
       {/* Hero Banner */}
-      <section className="pt-16 sm:pt-18 md:pt-20 pb-6 sm:pb-8 px-3 sm:px-4">
+      <section className="pb-6 px-3 sm:px-4">
         <div className="max-w-7xl mx-auto">
           {settings.bannerImage && (
-            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden">
+            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden mb-6">
               <img 
                 src={settings.bannerImage}
                 alt="Banner HIDDEN SPINGFIELD"
@@ -117,8 +113,8 @@ export default function StableShop() {
         </div>
       </section>
 
-      {/* Catégories */}
-      <section className="px-4 pb-6 pt-32 sm:pt-20 md:pt-18">
+      {/* Catégories - maintenant bien visibles */}
+      <section className="px-4 pb-6">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-lg font-bold mb-4 text-gray-300 text-center">Catégories</h3>
           
