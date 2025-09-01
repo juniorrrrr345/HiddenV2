@@ -1,0 +1,22 @@
+# Ignorer les fichiers du bot Telegram
+bot.js
+bot-*.js
+config.js
+keyboards.js
+models.js
+ecosystem.config.js
+Procfile
+render.yaml
+
+# Ignorer les fichiers de documentation
+README.md
+*.md
+
+# Ignorer les fichiers d'environnement
+.env.example
+.env.local
+.env
+
+# Ignorer git
+.git
+.gitignore
