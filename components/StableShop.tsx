@@ -118,7 +118,7 @@ export default function StableShop() {
       </section>
 
       {/* Catégories */}
-      <section className="px-4 pb-6 pt-24 sm:pt-18 md:pt-16">
+      <section className="px-4 pb-6 pt-32 sm:pt-20 md:pt-18">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-lg font-bold mb-4 text-gray-300 text-center">Catégories</h3>
           
