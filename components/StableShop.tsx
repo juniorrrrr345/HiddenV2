@@ -53,7 +53,7 @@ export default function StableShop() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header fixe avec logo adaptatif */}
-      <header className="fixed top-0 left-0 right-0 bg-black/60 backdrop-blur-xl z-50 border-b border-white/10 h-16 sm:h-18 md:h-20">
+      <header className="fixed top-0 left-0 right-0 bg-black/90 backdrop-blur-xl z-50 border-b border-white/10 h-14 sm:h-16 md:h-18">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full">
           <div className="flex justify-between items-center h-full">
             {/* Logo seulement si image uploadée */}
@@ -80,7 +80,7 @@ export default function StableShop() {
       </header>
 
       {/* Hero Banner */}
-      <section className="pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 px-3 sm:px-4">
+      <section className="pt-16 sm:pt-18 md:pt-20 pb-6 sm:pb-8 px-3 sm:px-4">
         <div className="max-w-7xl mx-auto">
           {settings.bannerImage && (
             <div className="relative rounded-xl sm:rounded-2xl overflow-hidden">
