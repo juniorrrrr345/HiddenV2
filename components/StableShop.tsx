@@ -97,14 +97,18 @@ export default function StableShop() {
 
       {/* Image bannière EN HAUT des catégories */}
       {settings.bannerImage && (
-        <section className="px-3 sm:px-4 pb-4">
+        <section className="px-3 sm:px-4 pb-6">
           <div className="max-w-7xl mx-auto">
-            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden bg-gray-900">
+            <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900 shadow-2xl border border-white/10">
               <img 
                 src={settings.bannerImage}
                 alt="Bannière HIDDEN SPINGFIELD"
-                className="w-full h-40 sm:h-48 md:h-56 lg:h-64 object-contain bg-black/20"
+                className="w-full h-48 sm:h-56 md:h-64 lg:h-72 object-cover hover:scale-105 transition-transform duration-500"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20"></div>
+              
+              {/* Effet de brillance */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-pulse"></div>
             </div>
           </div>
         </section>
