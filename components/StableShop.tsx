@@ -70,20 +70,17 @@ export default function StableShop() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header simple en haut */}
+      {/* Nom de la boutique en haut */}
+      <div className="text-center py-4">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          {settings.shopName || 'HIDDEN SPINGFIELD'}
+        </h1>
+      </div>
+
+      {/* Header simple avec panier */}
       <header className="bg-black/80 p-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          {/* Logo seulement si image uploadée */}
-          {settings.backgroundImage && (
-            <img 
-              src={settings.backgroundImage} 
-              alt="HIDDEN SPINGFIELD" 
-              className="h-8 sm:h-10 md:h-12 w-auto object-contain rounded-lg"
-              style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.2))' }}
-            />
-          )}
-          
-          {/* Cart Button */}
+        <div className="max-w-7xl mx-auto flex justify-end">
+          {/* Cart Button à droite */}
           <a href="/cart" className="relative">
             <div className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-full transition-all">
               <ShoppingBag size={18} />
@@ -102,13 +99,12 @@ export default function StableShop() {
       {settings.bannerImage && (
         <section className="px-3 sm:px-4 pb-4">
           <div className="max-w-7xl mx-auto">
-            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden">
+            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden bg-gray-900">
               <img 
                 src={settings.bannerImage}
                 alt="Bannière HIDDEN SPINGFIELD"
-                className="w-full h-32 sm:h-40 md:h-48 lg:h-56 object-cover"
+                className="w-full h-40 sm:h-48 md:h-56 lg:h-64 object-contain bg-black/20"
               />
-              <div className="absolute inset-0 bg-black/20"></div>
             </div>
           </div>
         </section>
