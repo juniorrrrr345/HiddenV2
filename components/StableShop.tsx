@@ -79,23 +79,55 @@ export default function StableShop() {
         </div>
       </header>
 
-      {/* Hero Banner avec image du panel admin */}
+      {/* Hero Banner */}
       <section className="pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 px-3 sm:px-4">
-        <div className="max-w-7xl mx-auto">
-          {settings.bannerImage ? (
-            /* Image rectangulaire du panel admin */
-            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden">
+        <div className="max-w-7xl mx-auto text-center">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-white">
+            Découvrez nos produits premium de qualité exceptionnelle
+          </h2>
+          
+          {settings.bannerImage && (
+            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden mb-6">
               <img 
                 src={settings.bannerImage}
-                alt="Banner HIDDEN SPINGFIELD"
+                alt="Bannière"
                 className="w-full h-32 sm:h-40 md:h-48 lg:h-56 object-cover"
               />
               <div className="absolute inset-0 bg-black/20"></div>
             </div>
-          ) : (
-            /* Pas de fallback - espace vide si pas d'image */
-            <div className="h-8"></div>
           )}
+          
+          <h3 className="text-lg font-bold mb-6 text-gray-300">Bannière</h3>
+        </div>
+      </section>
+
+      {/* Catégories */}
+      <section className="px-4 pb-6">
+        <div className="max-w-7xl mx-auto">
+          <h3 className="text-lg font-bold mb-4 text-gray-300 text-center">Catégories</h3>
+          
+          <div className="flex justify-center space-x-4 mb-8">
+            {/* TOUT */}
+            <div className="bg-gray-800/50 rounded-lg p-3 text-center min-w-[80px]">
+              <div className="text-2xl mb-1">✨</div>
+              <div className="text-xs font-bold text-white">TOUT</div>
+              <div className="text-xs text-gray-400">{products.length}</div>
+            </div>
+            
+            {/* HASH */}
+            <div className="bg-gray-800/50 rounded-lg p-3 text-center min-w-[80px]">
+              <div className="text-2xl mb-1">🍫</div>
+              <div className="text-xs font-bold text-white">HASH</div>
+              <div className="text-xs text-gray-400">{products.filter(p => p.category === 'hash').length}</div>
+            </div>
+            
+            {/* WEED */}
+            <div className="bg-gray-800/50 rounded-lg p-3 text-center min-w-[80px]">
+              <div className="text-2xl mb-1">🥗</div>
+              <div className="text-xs font-bold text-white">WEED</div>
+              <div className="text-xs text-gray-400">{products.filter(p => p.category === 'weed').length}</div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -103,8 +135,8 @@ export default function StableShop() {
       <section className="px-4 pb-32">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
-            <h3 className="text-xl md:text-2xl font-bold mb-2">Nos Produits</h3>
-            <p className="text-gray-400 text-sm">{products.length} produits disponibles</p>
+            <h3 className="text-xl md:text-2xl font-bold mb-2">Tous nos produits</h3>
+            <p className="text-gray-400 text-sm">{products.length} disponibles</p>
           </div>
 
           {loading ? (
@@ -178,7 +210,22 @@ export default function StableShop() {
 
                     <div className="flex items-center justify-between">
                       <span className="text-green-400 font-bold text-lg">
-                        {product.price > 0 ? `${product.price}€` : 'Prix sur demande'}
+                        {(() => {
+                          if (product.price > 0) {
+                            return `${product.price}€`;
+                          }
+                          // Si prix de base = 0, prendre le prix minimum des options
+                          if (product.pricing) {
+                            try {
+                              const pricingOptions = JSON.parse(product.pricing);
+                              if (pricingOptions.length > 0) {
+                                const minPrice = Math.min(...pricingOptions.map((p: any) => p.price));
+                                return `Dès ${minPrice}€`;
+                              }
+                            } catch (e) {}
+                          }
+                          return 'Prix sur demande';
+                        })()}
                       </span>
                       <a 
                         href={`/products/${product.id}`}
