@@ -10,6 +10,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [showVideo, setShowVideo] = useState(false);
+  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
     if (params.id) {
@@ -23,6 +24,13 @@ export default function ProductPage() {
       if (response.ok) {
         const data = await response.json();
         setProduct(data);
+        // Initialiser les quantités
+        setQuantities({
+          base: 1,
+          ...Object.fromEntries(
+            (JSON.parse(data.pricing || '[]')).map((_: any, index: number) => [`option_${index}`, 1])
+          )
+        });
       } else {
         console.error('Product not found');
       }
@@ -31,6 +39,31 @@ export default function ProductPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const updateQuantity = (key: string, delta: number) => {
+    setQuantities(prev => ({
+      ...prev,
+      [key]: Math.max(1, (prev[key] || 1) + delta)
+    }));
+  };
+
+  const addToCart = (productData: any, quantity: number, priceOption?: any) => {
+    // Simulation d'ajout au panier
+    const cartItem = {
+      ...productData,
+      quantity,
+      selectedPrice: priceOption || { weight: 'base', price: productData.price }
+    };
+    
+    // Sauvegarder dans localStorage pour simulation
+    if (typeof window !== 'undefined') {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      cart.push(cartItem);
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+    
+    alert(`✅ ${quantity}x ${productData.name} ajouté au panier !`);
   };
 
   if (loading) {
@@ -171,15 +204,24 @@ export default function ProductPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <button className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center">
+                    <button 
+                      onClick={() => updateQuantity('base', -1)}
+                      className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center"
+                    >
                       -
                     </button>
-                    <span className="w-8 text-center">1</span>
-                    <button className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center">
+                    <span className="w-8 text-center">{quantities.base || 1}</span>
+                    <button 
+                      onClick={() => updateQuantity('base', 1)}
+                      className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center"
+                    >
                       +
                     </button>
                   </div>
-                  <button className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-bold">
+                  <button 
+                    onClick={() => addToCart(product, quantities.base || 1)}
+                    className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-bold"
+                  >
                     AJOUTER
                   </button>
                 </div>
@@ -196,15 +238,24 @@ export default function ProductPage() {
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
-                          <button className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center">
+                          <button 
+                            onClick={() => updateQuantity(`option_${index}`, -1)}
+                            className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center"
+                          >
                             -
                           </button>
-                          <span className="w-8 text-center">1</span>
-                          <button className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center">
+                          <span className="w-8 text-center">{quantities[`option_${index}`] || 1}</span>
+                          <button 
+                            onClick={() => updateQuantity(`option_${index}`, 1)}
+                            className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center"
+                          >
                             +
                           </button>
                         </div>
-                        <button className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-bold">
+                        <button 
+                          onClick={() => addToCart(product, quantities[`option_${index}`] || 1, pricing)}
+                          className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-bold"
+                        >
                           AJOUTER
                         </button>
                       </div>
