@@ -56,19 +56,15 @@ export default function StableShop() {
       <header className="fixed top-0 left-0 right-0 bg-black/60 backdrop-blur-xl z-50 border-b border-white/10 h-16 sm:h-18 md:h-20">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full">
           <div className="flex justify-between items-center h-full">
-            {/* Logo ou nom - adaptatif */}
+            {/* Logo seulement si image uploadée */}
             <div className="flex-1 flex justify-start items-center">
-              {settings.backgroundImage ? (
+              {settings.backgroundImage && (
                 <img 
                   src={settings.backgroundImage} 
                   alt="HIDDEN SPINGFIELD" 
                   className="h-6 sm:h-8 md:h-10 lg:h-12 w-auto max-w-[60vw] object-contain rounded-lg"
                   style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.2))' }}
                 />
-              ) : (
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent truncate">
-                  {settings.shopName}
-                </h1>
               )}
             </div>
             
@@ -97,17 +93,8 @@ export default function StableShop() {
               <div className="absolute inset-0 bg-black/20"></div>
             </div>
           ) : (
-            /* Fallback si pas d'image */
-            <div className="text-center">
-              <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-white/10">
-                <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-2 sm:mb-4 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent leading-tight">
-                  HIDDEN SPINGFIELD
-                </h2>
-                <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-                  NOUVEAU DROP
-                </h3>
-              </div>
-            </div>
+            /* Pas de fallback - espace vide si pas d'image */
+            <div className="h-8"></div>
           )}
         </div>
       </section>
