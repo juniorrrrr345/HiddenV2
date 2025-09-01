@@ -1337,10 +1337,24 @@ function ProductFormModal({ product, categories, onClose, onSave }: any) {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    
     try {
+      // Préparer les données avec tous les champs requis
       const submitData = {
-        ...formData,
-        pricing: pricingOptions.filter((p: any) => p.weight && p.price > 0)
+        name: formData.name || 'Produit sans nom',
+        origin: formData.origin || '',
+        image: formData.image || '',
+        video: formData.video || '',
+        price: Number(formData.price) || 0,
+        pricing: JSON.stringify(pricingOptions.filter((p: any) => p.weight && p.price > 0)),
+        quantity: Number(formData.quantity) || 0,
+        category: formData.category || 'weed',
+        tag: formData.tag || '',
+        tagColor: formData.tagColor || 'green',
+        country: formData.country || 'FR',
+        countryFlag: formData.countryFlag || '🇫🇷',
+        description: formData.description || '',
+        available: formData.available !== false
       };
 
       // Utiliser le bon ID (soit _id soit id)
@@ -1348,7 +1362,13 @@ function ProductFormModal({ product, categories, onClose, onSave }: any) {
       const url = productId ? `/api/products/${productId}` : '/api/products';
       const method = product ? 'PUT' : 'POST';
       
-      console.log('Submitting:', { url, method, submitData });
+      console.log('🔍 DEBUG SUBMIT:', { 
+        productId, 
+        url, 
+        method, 
+        submitData,
+        originalProduct: product 
+      });
       
       const res = await fetch(url, {
         method,
@@ -1356,18 +1376,26 @@ function ProductFormModal({ product, categories, onClose, onSave }: any) {
         body: JSON.stringify(submitData),
       });
       
+      console.log('🔍 RESPONSE STATUS:', res.status);
+      
       if (res.ok) {
         const updatedProduct = await res.json();
-        console.log('Product saved successfully:', updatedProduct);
+        console.log('✅ Product saved successfully:', updatedProduct);
         alert('✅ Produit sauvegardé avec succès !');
         onSave();
       } else {
-        const errorData = await res.json();
-        console.error('Error response:', errorData);
-        alert('❌ Erreur: ' + (errorData.error || 'Erreur lors de la sauvegarde'));
+        const errorText = await res.text();
+        console.error('❌ Error response:', { status: res.status, text: errorText });
+        
+        try {
+          const errorData = JSON.parse(errorText);
+          alert('❌ Erreur: ' + (errorData.error || 'Erreur lors de la sauvegarde'));
+        } catch {
+          alert('❌ Erreur HTTP: ' + res.status + ' - ' + errorText);
+        }
       }
     } catch (error) {
-      console.error('Erreur:', error);
+      console.error('❌ Erreur catch:', error);
       alert('❌ Erreur lors de la sauvegarde: ' + error);
     }
   };
