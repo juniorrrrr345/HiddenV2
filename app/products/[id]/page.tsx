@@ -179,9 +179,11 @@ export default function ProductPage() {
                 )}
               </div>
 
-              <div className="text-3xl font-bold text-green-400 mb-6">
-                {product.price}€
-              </div>
+              {product.price > 0 && (
+                <div className="text-3xl font-bold text-green-400 mb-6">
+                  {product.price}€
+                </div>
+              )}
             </div>
 
             {/* Description */}
