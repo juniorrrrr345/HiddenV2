@@ -1,31 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import Category from '@/models/Category';
+import { executeSqlOnD1 } from '@/lib/cloudflare-d1';
 
 export async function GET() {
   try {
-    await dbConnect();
-    const categories = await Category.find({}).sort({ order: 1 });
+    const result = await executeSqlOnD1('SELECT * FROM categories ORDER BY name');
+    const categories = result.result?.[0]?.results || [];
     return NextResponse.json(categories);
   } catch (error) {
     console.error('Error fetching categories:', error);
-    // En cas d'erreur MongoDB, retourner un tableau vide
     return NextResponse.json([]);
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    await dbConnect();
     const body = await request.json();
     
-    // S'assurer que l'ordre est défini
-    if (!body.order) {
-      body.order = 1;
+    const result = await executeSqlOnD1(
+      'INSERT INTO categories (name, icon, color) VALUES (?, ?, ?)',
+      [body.name || 'Nouvelle catégorie', body.icon || '📦', body.color || '#22C55E']
+    );
+    
+    if (result.success) {
+      const newId = result.result?.[0]?.meta?.last_row_id;
+      const newCategory = {
+        id: newId,
+        name: body.name,
+        icon: body.icon || '📦',
+        color: body.color || '#22C55E'
+      };
+      return NextResponse.json(newCategory, { status: 201 });
     }
     
-    const category = await Category.create(body);
-    return NextResponse.json(category, { status: 201 });
+    throw new Error('Failed to create category');
   } catch (error) {
     console.error('Error creating category:', error);
     return NextResponse.json({ error: 'Failed to create category' }, { status: 500 });

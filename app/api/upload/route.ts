@@ -1,12 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { v2 as cloudinary } from 'cloudinary';
-
-// Configuration Cloudinary
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+import r2Client from '@/lib/cloudflare-r2';
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,49 +27,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Type de fichier non supporté' }, { status: 400 });
     }
 
-    // Convertir le fichier en buffer
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Upload vers Cloudinary
-    const uploadOptions: any = {
-      folder: resourceType === 'video' ? 'hidden-spingfield-videos' : 'hidden-spingfield-products',
-      resource_type: resourceType === 'video' ? 'video' : 'image',
-    };
-
-    // Transformations spécifiques selon le type
+    // Upload vers R2 selon le type
+    let uploadedUrl: string;
+    
     if (resourceType === 'video') {
-      uploadOptions.transformation = [
-        { quality: 'auto:good' },
-        { format: 'mp4' }
-      ];
+      uploadedUrl = await r2Client.uploadVideo(file);
     } else {
-      uploadOptions.transformation = [
-        { width: 1000, height: 1000, crop: 'fill', gravity: 'center' },
-        { quality: 'auto:good' },
-        { fetch_format: 'auto' }
-      ];
+      uploadedUrl = await r2Client.uploadImage(file);
     }
 
-    const result = await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream(
-        uploadOptions,
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      ).end(buffer);
-    });
-
     return NextResponse.json({ 
-      url: (result as any).secure_url,
-      public_id: (result as any).public_id 
+      url: uploadedUrl,
+      public_id: uploadedUrl.split('/').pop()?.split('.')[0] || 'unknown'
     });
 
   } catch (error) {
-    console.error('Erreur upload Cloudinary:', error);
+    console.error('Erreur upload R2:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de l\'upload' },
+      { error: 'Erreur lors de l\'upload vers R2' },
       { status: 500 }
     );
   }

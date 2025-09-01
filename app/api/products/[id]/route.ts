@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import Product from '@/models/Product';
-import { products as staticProducts } from '@/lib/products';
+import { getProductById, updateProduct, deleteProduct } from '@/lib/mongodb';
 
 export async function GET(
   request: NextRequest,
@@ -9,30 +7,13 @@ export async function GET(
 ) {
   try {
     const { id } = await context.params;
+    const product = await getProductById(parseInt(id));
     
-    // Essayer de récupérer depuis MongoDB
-    try {
-      await dbConnect();
-      const product = await Product.findById(id);
-      if (product) {
-        return NextResponse.json(product);
-      }
-    } catch (mongoError) {
-      console.log('MongoDB error, trying static products');
+    if (!product) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
     
-    // Si pas trouvé dans MongoDB, chercher dans les produits statiques
-    const staticProduct = staticProducts.find(p => p.id === id);
-    if (staticProduct) {
-      return NextResponse.json({
-        ...staticProduct,
-        _id: staticProduct.id,
-        quantity: 50,
-        available: true
-      });
-    }
-    
-    return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+    return NextResponse.json(product);
   } catch (error) {
     console.error('Error fetching product:', error);
     return NextResponse.json({ error: 'Failed to fetch product' }, { status: 500 });
@@ -49,50 +30,30 @@ export async function PUT(
     
     console.log('Updating product:', id, body);
     
-    // Essayer de mettre à jour dans MongoDB
-    try {
-      await dbConnect();
-      
-      // Vérifier si le produit existe dans MongoDB
-      let product = await Product.findById(id);
-      
-      if (!product) {
-        // Si c'est un produit statique, le créer dans MongoDB
-        const staticProduct = staticProducts.find(p => p.id === id);
-        if (staticProduct) {
-          console.log('Creating product from static data');
-          // Créer le produit dans MongoDB avec les nouvelles données
-          product = await Product.create({
-            ...staticProduct,
-            ...body,
-            _id: undefined // Laisser MongoDB générer un nouvel ID
-          });
-          return NextResponse.json(product);
-        }
-      } else {
-        // Mettre à jour le produit existant
-        product = await Product.findByIdAndUpdate(
-          id,
-          body,
-          { new: true, runValidators: true }
-        );
-      }
-      
-      if (!product) {
-        return NextResponse.json({ error: 'Product not found' }, { status: 404 });
-      }
-      
-      return NextResponse.json(product);
-    } catch (mongoError: any) {
-      console.error('MongoDB error:', mongoError);
-      
-      // Si MongoDB n'est pas disponible, sauvegarder localement
-      // Pour l'instant, on retourne juste une erreur
-      return NextResponse.json(
-        { error: 'Database error: ' + mongoError.message },
-        { status: 500 }
-      );
+    const success = await updateProduct(parseInt(id), {
+      name: body.name,
+      origin: body.origin,
+      image: body.image,
+      video: body.video,
+      price: body.price,
+      pricing: typeof body.pricing === 'string' ? body.pricing : JSON.stringify(body.pricing || []),
+      quantity: body.quantity,
+      category: body.category,
+      tag: body.tag,
+      tagColor: body.tagColor,
+      country: body.country,
+      countryFlag: body.countryFlag,
+      description: body.description,
+      available: body.available
+    });
+    
+    if (!success) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
+    
+    // Récupérer le produit mis à jour
+    const updatedProduct = await getProductById(parseInt(id));
+    return NextResponse.json(updatedProduct);
   } catch (error: any) {
     console.error('Error updating product:', error);
     return NextResponse.json(
@@ -108,10 +69,9 @@ export async function DELETE(
 ) {
   try {
     const { id } = await context.params;
-    await dbConnect();
-    const product = await Product.findByIdAndDelete(id);
+    const success = await deleteProduct(parseInt(id));
     
-    if (!product) {
+    if (!success) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
     

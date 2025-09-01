@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import Category from '@/models/Category';
+import { executeSqlOnD1 } from '@/lib/cloudflare-d1';
 
 export async function GET(
   request: NextRequest,
@@ -8,8 +7,8 @@ export async function GET(
 ) {
   try {
     const { id } = await context.params;
-    await dbConnect();
-    const category = await Category.findById(id);
+    const result = await executeSqlOnD1('SELECT * FROM categories WHERE id = ?', [parseInt(id)]);
+    const category = result.result?.[0]?.results?.[0];
     
     if (!category) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 });
@@ -28,14 +27,20 @@ export async function PUT(
 ) {
   try {
     const { id } = await context.params;
-    await dbConnect();
     const body = await request.json();
     
-    const category = await Category.findByIdAndUpdate(
-      id,
-      body,
-      { new: true, runValidators: true }
+    const result = await executeSqlOnD1(
+      'UPDATE categories SET name = ?, icon = ?, color = ? WHERE id = ?',
+      [body.name, body.icon, body.color, parseInt(id)]
     );
+    
+    if (!result.success) {
+      return NextResponse.json({ error: 'Failed to update category' }, { status: 500 });
+    }
+    
+    // Récupérer la catégorie mise à jour
+    const updatedResult = await executeSqlOnD1('SELECT * FROM categories WHERE id = ?', [parseInt(id)]);
+    const category = updatedResult.result?.[0]?.results?.[0];
     
     if (!category) {
       return NextResponse.json({ error: 'Category not found' }, { status: 404 });
@@ -55,11 +60,10 @@ export async function DELETE(
   try {
     const { id } = await context.params;
     
-    await dbConnect();
-    const category = await Category.findByIdAndDelete(id);
+    const result = await executeSqlOnD1('DELETE FROM categories WHERE id = ?', [parseInt(id)]);
     
-    if (!category) {
-      return NextResponse.json({ error: 'Category not found' }, { status: 404 });
+    if (!result.success) {
+      return NextResponse.json({ error: 'Failed to delete category' }, { status: 500 });
     }
     
     return NextResponse.json({ message: 'Category deleted successfully' });

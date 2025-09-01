@@ -1,54 +1,64 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import Settings from '@/models/Settings';
+import { executeSqlOnD1 } from '@/lib/cloudflare-d1';
 
 export async function GET() {
   try {
-    await dbConnect();
-    let settings = await Settings.findOne({});
+    const result = await executeSqlOnD1('SELECT * FROM settings WHERE id = 1');
+    let settings = result.result?.[0]?.results?.[0];
     
     if (!settings) {
-      settings = await Settings.create({
-        shopName: 'HIDDEN SPINGFIELD',
-        bannerText: 'NOUVEAU DROP',
-        bannerImage: '',
-        backgroundType: 'color',
-        backgroundColor: 'black',
-        backgroundImage: '',
-        gradientFrom: '#000000',
-        gradientTo: '#111111',
-        orderLink: '',
-        burnsLink: '',
-        apuLink: '',
-        moeLink: ''
-      });
+      // Créer les settings par défaut
+      await executeSqlOnD1(
+        'INSERT INTO settings (id, shop_title, theme_color, background_opacity, background_blur) VALUES (?, ?, ?, ?, ?)',
+        [1, 'HIDDEN SPINGFIELD', 'glow', 20, 5]
+      );
+      
+      const newResult = await executeSqlOnD1('SELECT * FROM settings WHERE id = 1');
+      settings = newResult.result?.[0]?.results?.[0];
     }
     
-    return NextResponse.json(settings);
+    return NextResponse.json(settings || {});
   } catch (error) {
+    console.error('Settings GET error:', error);
     return NextResponse.json({ error: 'Failed to fetch settings' }, { status: 500 });
   }
 }
 
 export async function PUT(request: NextRequest) {
   try {
-    await dbConnect();
     const body = await request.json();
     
-    let settings = await Settings.findOne({});
+    // Construire la requête UPDATE dynamiquement
+    const fields = [];
+    const values = [];
     
-    if (!settings) {
-      settings = await Settings.create(body);
-    } else {
-      settings = await Settings.findOneAndUpdate(
-        {},
-        body,
-        { new: true, runValidators: true }
+    if (body.shop_title !== undefined) { fields.push('shop_title = ?'); values.push(body.shop_title); }
+    if (body.background_image !== undefined) { fields.push('background_image = ?'); values.push(body.background_image); }
+    if (body.background_opacity !== undefined) { fields.push('background_opacity = ?'); values.push(body.background_opacity); }
+    if (body.background_blur !== undefined) { fields.push('background_blur = ?'); values.push(body.background_blur); }
+    if (body.info_content !== undefined) { fields.push('info_content = ?'); values.push(body.info_content); }
+    if (body.contact_content !== undefined) { fields.push('contact_content = ?'); values.push(body.contact_content); }
+    if (body.whatsapp_link !== undefined) { fields.push('whatsapp_link = ?'); values.push(body.whatsapp_link); }
+    if (body.whatsapp_number !== undefined) { fields.push('whatsapp_number = ?'); values.push(body.whatsapp_number); }
+    if (body.scrolling_text !== undefined) { fields.push('scrolling_text = ?'); values.push(body.scrolling_text); }
+    if (body.theme_color !== undefined) { fields.push('theme_color = ?'); values.push(body.theme_color); }
+    
+    if (fields.length > 0) {
+      values.push(1); // WHERE id = 1
+      
+      await executeSqlOnD1(
+        `UPDATE settings SET ${fields.join(', ')} WHERE id = ?`,
+        values
       );
     }
     
-    return NextResponse.json(settings);
+    // Récupérer les settings mis à jour
+    const result = await executeSqlOnD1('SELECT * FROM settings WHERE id = 1');
+    const settings = result.result?.[0]?.results?.[0];
+    
+    return NextResponse.json(settings || {});
   } catch (error) {
+    console.error('Settings PUT error:', error);
     return NextResponse.json({ error: 'Failed to update settings' }, { status: 500 });
   }
 }

@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import Admin from '@/models/Admin';
+import { executeSqlOnD1 } from '@/lib/cloudflare-d1';
+import bcrypt from 'bcryptjs';
 
-// This route is for initial setup only
-// It should be disabled in production after creating the first admin
+// This route is for initial setup only - creates admin in D1
 export async function POST(request: NextRequest) {
   try {
     const { username, password, setupKey } = await request.json();
@@ -25,31 +24,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await dbConnect();
+    // Create admin table if not exists
+    await executeSqlOnD1(`
+      CREATE TABLE IF NOT EXISTS admins (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
     // Check if admin already exists
-    const existingAdmin = await Admin.findOne({ username });
+    const existingAdmin = await executeSqlOnD1('SELECT * FROM admins WHERE username = ?', [username]);
     
-    if (existingAdmin) {
+    if (existingAdmin.result?.[0]?.results?.length > 0) {
       return NextResponse.json(
         { error: 'Admin already exists' },
         { status: 400 }
       );
     }
 
-    // Create new admin
-    const admin = new Admin({
-      username,
-      password,
-    });
-
-    await admin.save();
+    // Hash password and create admin
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    await executeSqlOnD1(
+      'INSERT INTO admins (username, password) VALUES (?, ?)',
+      [username, hashedPassword]
+    );
 
     return NextResponse.json(
       { 
         success: true,
         message: 'Admin created successfully',
-        username: admin.username,
+        username: username,
       },
       { status: 201 }
     );

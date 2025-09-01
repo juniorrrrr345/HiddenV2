@@ -1,46 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import Product from '@/models/Product';
-import { products as staticProducts } from '@/lib/products';
+import { getProducts, createProduct } from '@/lib/mongodb';
 
 export async function GET() {
   try {
-    await dbConnect();
-    const products = await Product.find({}).sort({ createdAt: -1 });
-    
-    // Si pas de produits dans MongoDB, utiliser les produits statiques
-    if (products.length === 0) {
-      console.log('No products in MongoDB, using static products');
-      return NextResponse.json(staticProducts.map(p => ({
-        ...p,
-        _id: p.id,
-        quantity: 50,
-        available: true
-      })));
-    }
-    
+    const products = await getProducts();
     return NextResponse.json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
-    // En cas d'erreur MongoDB, retourner les produits statiques
-    return NextResponse.json(staticProducts.map(p => ({
-      ...p,
-      _id: p.id,
-      quantity: 50,
-      available: true
-    })));
+    return NextResponse.json([]);
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    await dbConnect();
     const body = await request.json();
     
     console.log('Creating product:', body);
     
-    const product = await Product.create(body);
-    return NextResponse.json(product, { status: 201 });
+    const productId = await createProduct({
+      name: body.name,
+      origin: body.origin || '',
+      image: body.image || '',
+      video: body.video || '',
+      price: body.price || 0,
+      pricing: JSON.stringify(body.pricing || []),
+      quantity: body.quantity || 0,
+      category: body.category || 'weed',
+      tag: body.tag || '',
+      tagColor: body.tagColor || 'green',
+      country: body.country || 'FR',
+      countryFlag: body.countryFlag || '🇫🇷',
+      description: body.description || '',
+      available: body.available !== false
+    });
+    
+    return NextResponse.json({ id: productId, ...body }, { status: 201 });
   } catch (error: any) {
     console.error('Error creating product:', error);
     return NextResponse.json(

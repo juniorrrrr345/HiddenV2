@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/mongodb';
-import Product from '@/models/Product';
-import Category from '@/models/Category';
+import { executeSqlOnD1 } from '@/lib/cloudflare-d1';
 
 // Catégories à créer
 const categories = [
@@ -164,8 +162,6 @@ const products = [
 
 export async function POST() {
   try {
-    await dbConnect();
-    
     const results = {
       categories: { created: 0, errors: 0 },
       products: { created: 0, errors: 0 }
@@ -174,9 +170,14 @@ export async function POST() {
     // 1. Créer les catégories
     for (const categoryData of categories) {
       try {
-        const existingCategory = await Category.findOne({ slug: categoryData.slug });
-        if (!existingCategory) {
-          await Category.create(categoryData);
+        // Vérifier si la catégorie existe
+        const existing = await executeSqlOnD1('SELECT id FROM categories WHERE name = ?', [categoryData.name]);
+        
+        if (!existing.result?.[0]?.results?.length) {
+          await executeSqlOnD1(
+            'INSERT INTO categories (name, icon, color) VALUES (?, ?, ?)',
+            [categoryData.name, '📦', '#22C55E']
+          );
           results.categories.created++;
         }
       } catch (error) {
@@ -188,9 +189,29 @@ export async function POST() {
     // 2. Créer les produits
     for (const productData of products) {
       try {
-        const existingProduct = await Product.findOne({ name: productData.name });
-        if (!existingProduct) {
-          await Product.create(productData);
+        // Vérifier si le produit existe
+        const existing = await executeSqlOnD1('SELECT id FROM products WHERE name = ?', [productData.name]);
+        
+        if (!existing.result?.[0]?.results?.length) {
+          await executeSqlOnD1(
+            'INSERT INTO products (name, origin, image, video, price, pricing, quantity, category, tag, tagColor, country, countryFlag, description, available) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [
+              productData.name,
+              productData.origin,
+              productData.image || '',
+              '', // video
+              productData.price,
+              JSON.stringify(productData.pricing || []),
+              productData.quantity,
+              productData.category,
+              productData.tag,
+              productData.tagColor,
+              productData.country,
+              productData.countryFlag,
+              productData.description,
+              productData.available ? 1 : 0
+            ]
+          );
           results.products.created++;
         }
       } catch (error) {
