@@ -53,7 +53,7 @@ export default function StableShop() {
   return (
     <div className="min-h-screen bg-black text-white">
       {/* Header fixe avec logo adaptatif */}
-      <header className="fixed top-0 left-0 right-0 bg-black backdrop-blur-xl z-50 border-b border-white/10 h-10 sm:h-12 md:h-14">
+      <header className="fixed top-0 left-0 right-0 bg-black/90 backdrop-blur-xl z-50 border-b border-white/10 h-14 sm:h-16 md:h-18">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 h-full">
           <div className="flex justify-between items-center h-full">
             {/* Logo seulement si image uploadée */}
@@ -80,7 +80,7 @@ export default function StableShop() {
       </header>
 
       {/* Hero Banner */}
-      <section className="pt-12 sm:pt-14 md:pt-16 pb-6 sm:pb-8 px-3 sm:px-4">
+      <section className="pt-16 sm:pt-18 md:pt-20 pb-6 sm:pb-8 px-3 sm:px-4">
         <div className="max-w-7xl mx-auto">
           {settings.bannerImage && (
             <div className="relative rounded-xl sm:rounded-2xl overflow-hidden">
@@ -96,7 +96,7 @@ export default function StableShop() {
       </section>
 
       {/* Catégories */}
-      <section className="px-4 pb-6">
+      <section className="px-4 pb-6 pt-4">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-lg font-bold mb-4 text-gray-300 text-center">Catégories</h3>
           
