@@ -69,12 +69,12 @@ export default function StableShop() {
             </div>
             
             {/* Cart Button adaptatif */}
-            <button className="relative group flex-shrink-0">
+            <a href="/cart" className="relative group flex-shrink-0">
               <div className="flex items-center gap-1 sm:gap-2 bg-white/10 hover:bg-white/20 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full transition-all backdrop-blur">
                 <ShoppingBag size={16} className="sm:w-5 sm:h-5" />
                 <span className="hidden sm:inline font-medium text-sm">Panier</span>
               </div>
-            </button>
+            </a>
           </div>
         </div>
       </header>
@@ -178,7 +178,7 @@ export default function StableShop() {
 
                     <div className="flex items-center justify-between">
                       <span className="text-green-400 font-bold text-lg">
-                        {product.price}€
+                        {product.price > 0 ? `${product.price}€` : 'Prix sur demande'}
                       </span>
                       <a 
                         href={`/products/${product.id}`}
@@ -197,8 +197,8 @@ export default function StableShop() {
 
       {/* Navigation Bottom fixe */}
       <nav className="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-xl border-t border-white/10 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex justify-center items-center space-x-8">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex justify-center items-center space-x-12 sm:space-x-16 md:space-x-20">
             {/* Accueil */}
             <a 
               href="/"
