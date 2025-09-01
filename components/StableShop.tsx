@@ -81,23 +81,17 @@ export default function StableShop() {
 
       {/* Hero Banner */}
       <section className="pt-20 sm:pt-24 md:pt-28 pb-6 sm:pb-8 px-3 sm:px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-white">
-            Découvrez nos produits premium de qualité exceptionnelle
-          </h2>
-          
+        <div className="max-w-7xl mx-auto">
           {settings.bannerImage && (
-            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden mb-6">
+            <div className="relative rounded-xl sm:rounded-2xl overflow-hidden">
               <img 
                 src={settings.bannerImage}
-                alt="Bannière"
+                alt="Banner HIDDEN SPINGFIELD"
                 className="w-full h-32 sm:h-40 md:h-48 lg:h-56 object-cover"
               />
               <div className="absolute inset-0 bg-black/20"></div>
             </div>
           )}
-          
-          <h3 className="text-lg font-bold mb-6 text-gray-300">Bannière</h3>
         </div>
       </section>
 
