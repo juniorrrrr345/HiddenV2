@@ -7,6 +7,7 @@ export default function StableShop() {
   const [mounted, setMounted] = useState(false);
   const [products, setProducts] = useState<any[]>([]);
   const [settings, setSettings] = useState<any>({ shopName: 'HIDDEN SPINGFIELD' });
+  const [socials, setSocials] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,43 +51,48 @@ export default function StableShop() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      {/* Header fixe avec logo */}
+      {/* Header fixe avec logo adaptatif */}
       <header className="fixed top-0 left-0 right-0 bg-black/60 backdrop-blur-xl z-50 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex justify-between items-center">
-            {/* Logo ou nom */}
-            {settings.backgroundImage ? (
-              <img 
-                src={settings.backgroundImage} 
-                alt="HIDDEN SPINGFIELD" 
-                className="h-8 md:h-12 w-auto rounded-lg"
-                style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.2))' }}
-              />
-            ) : (
-              <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                {settings.shopName}
-              </h1>
-            )}
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2 sm:py-3">
+          <div className="flex justify-between items-center min-h-[50px] sm:min-h-[60px]">
+            {/* Logo ou nom - adaptatif */}
+            <div className="flex-1 flex justify-start items-center">
+              {settings.backgroundImage ? (
+                <img 
+                  src={settings.backgroundImage} 
+                  alt="HIDDEN SPINGFIELD" 
+                  className="h-6 sm:h-8 md:h-10 lg:h-12 w-auto max-w-[60vw] object-contain rounded-lg"
+                  style={{ filter: 'drop-shadow(0 0 10px rgba(255,255,255,0.2))' }}
+                />
+              ) : (
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent truncate">
+                  {settings.shopName}
+                </h1>
+              )}
+            </div>
             
-            {/* Cart Button */}
-            <button className="relative group">
-              <div className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-all backdrop-blur">
-                <ShoppingBag size={20} />
-                <span className="hidden md:inline font-medium">Panier</span>
+            {/* Cart Button adaptatif */}
+            <button className="relative group flex-shrink-0">
+              <div className="flex items-center gap-1 sm:gap-2 bg-white/10 hover:bg-white/20 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full transition-all backdrop-blur">
+                <ShoppingBag size={16} className="sm:w-5 sm:h-5" />
+                <span className="hidden sm:inline font-medium text-sm">Panier</span>
               </div>
             </button>
           </div>
         </div>
       </header>
 
-      {/* Hero Banner */}
-      <section className="pt-20 pb-8 px-4">
+      {/* Hero Banner adaptatif */}
+      <section className="pt-16 sm:pt-20 pb-6 sm:pb-8 px-3 sm:px-4">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 backdrop-blur-lg rounded-2xl p-8 border border-white/10">
-            <h2 className="text-3xl md:text-5xl font-black mb-4 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
-              {settings.bannerText}
+          <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 backdrop-blur-lg rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-white/10">
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-black mb-2 sm:mb-4 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent leading-tight">
+              HIDDEN SPINGFIELD
             </h2>
-            <p className="text-gray-300 text-lg md:text-xl">
+            <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-2 sm:mb-4 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+              NOUVEAU DROP
+            </h3>
+            <p className="text-gray-300 text-sm sm:text-base md:text-lg lg:text-xl leading-relaxed">
               Découvrez nos produits premium de qualité exceptionnelle
             </p>
           </div>
@@ -174,9 +180,12 @@ export default function StableShop() {
                       <span className="text-green-400 font-bold text-lg">
                         {product.price}€
                       </span>
-                      <button className="bg-white/10 hover:bg-white/20 px-2 py-1 rounded text-xs transition-colors">
+                      <a 
+                        href={`/products/${product.id}`}
+                        className="bg-white/10 hover:bg-white/20 px-2 py-1 rounded text-xs transition-colors"
+                      >
                         Voir
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -186,11 +195,40 @@ export default function StableShop() {
         </div>
       </section>
 
-      {/* Footer */}
+      {/* Footer avec réseaux sociaux */}
       <footer className="bg-gray-900/50 backdrop-blur-lg border-t border-white/10 p-6">
-        <div className="max-w-7xl mx-auto text-center">
-          <h4 className="text-xl font-bold mb-2">{settings.shopName}</h4>
-          <p className="text-gray-400 text-sm">Boutique Premium</p>
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col items-center space-y-4">
+            {/* Réseaux sociaux */}
+            <div className="flex items-center space-x-6">
+              <a 
+                href="https://instagram.com/" 
+                target="_blank"
+                className="flex items-center space-x-2 text-gray-400 hover:text-pink-400 transition-colors"
+              >
+                <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-sm">📷</span>
+                </div>
+                <span className="hidden sm:inline">Instagram</span>
+              </a>
+              
+              <a 
+                href="https://t.me/" 
+                target="_blank"
+                className="flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors"
+              >
+                <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white text-sm">✈️</span>
+                </div>
+                <span className="hidden sm:inline">Telegram</span>
+              </a>
+            </div>
+            
+            {/* Copyright discret */}
+            <div className="text-gray-500 text-xs">
+              © 2024 {settings.shopName}
+            </div>
+          </div>
         </div>
       </footer>
     </div>
