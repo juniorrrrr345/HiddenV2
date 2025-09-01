@@ -1,5 +1,5 @@
-import ModernShop from '@/components/ModernShop';
+import StableShop from '@/components/StableShop';
 
 export default function Home() {
-  return <ModernShop />;
+  return <StableShop />;
 }
