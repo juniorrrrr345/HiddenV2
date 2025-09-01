@@ -196,38 +196,40 @@ export default function ProductPage() {
             <div className="bg-gray-900 rounded-lg p-6">
               <h3 className="text-xl font-bold mb-4">Prix et Options</h3>
               
-              {/* Prix de base */}
-              <div className="mb-6">
-                <div className="flex justify-between items-center p-4 bg-gray-800 rounded-lg mb-3">
-                  <span className="font-medium">Prix de base</span>
-                  <span className="text-green-400 font-bold text-xl">{product.price}€</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
+              {/* Prix de base - seulement si > 0 */}
+              {product.price > 0 && (
+                <div className="mb-6">
+                  <div className="flex justify-between items-center p-4 bg-gray-800 rounded-lg mb-3">
+                    <span className="font-medium">Prix de base</span>
+                    <span className="text-green-400 font-bold text-xl">{product.price}€</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <button 
+                        onClick={() => updateQuantity('base', -1)}
+                        className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center"
+                      >
+                        -
+                      </button>
+                      <span className="w-8 text-center">{quantities.base || 1}</span>
+                      <button 
+                        onClick={() => updateQuantity('base', 1)}
+                        className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center"
+                      >
+                        +
+                      </button>
+                    </div>
                     <button 
-                      onClick={() => updateQuantity('base', -1)}
-                      className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center"
+                      onClick={() => addToCart(product, quantities.base || 1)}
+                      className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-bold"
                     >
-                      -
-                    </button>
-                    <span className="w-8 text-center">{quantities.base || 1}</span>
-                    <button 
-                      onClick={() => updateQuantity('base', 1)}
-                      className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center"
-                    >
-                      +
+                      AJOUTER
                     </button>
                   </div>
-                  <button 
-                    onClick={() => addToCart(product, quantities.base || 1)}
-                    className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-bold"
-                  >
-                    AJOUTER
-                  </button>
                 </div>
-              </div>
+              )}
 
-              {/* Options de prix additionnelles */}
+              {/* Options de prix */}
               {product.pricing && JSON.parse(product.pricing || '[]').length > 0 && (
                 <div className="space-y-3">
                   {JSON.parse(product.pricing || '[]').map((pricing: any, index: number) => (
