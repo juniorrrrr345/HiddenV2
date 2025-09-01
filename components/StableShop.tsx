@@ -193,12 +193,9 @@ export default function StableShop() {
                       {product.name}
                     </h4>
                     
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="mb-2">
                       <span className="text-xs text-gray-400">
                         {product.countryFlag} {product.origin || product.country}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        Stock: {product.quantity}
                       </span>
                     </div>
 
