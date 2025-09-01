@@ -180,30 +180,42 @@ export default function AdminDashboard() {
 
   const handleSaveSettings = async () => {
     try {
+      console.log('🔍 Sauvegarde settings:', settings);
+      
+      const settingsData = {
+        shop_title: settings.shopName || 'HIDDEN SPINGFIELD',
+        background_image: settings.backgroundImage || '',
+        banner_image: settings.bannerImage || '',
+        banner_text: settings.bannerText || '',
+        background_opacity: settings.backgroundOpacity || 20,
+        background_blur: settings.backgroundBlur || 5,
+        scrolling_text: settings.bannerSubtext || '',
+        theme_color: settings.themeColor || 'glow',
+        burns_link: settings.burnsLink || '',
+        apu_link: settings.apuLink || '',
+        moe_link: settings.moeLink || ''
+      };
+      
+      console.log('🔍 Données envoyées à l\'API:', settingsData);
+      
       const res = await fetch('/api/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(settings),
+        body: JSON.stringify(settingsData),
       });
+      
       if (res.ok) {
-        // Synchroniser avec le store
-        await updateThemeSettings({
-          backgroundType: settings.backgroundType || 'color',
-          backgroundColor: settings.backgroundColor || 'black',
-          backgroundImage: settings.backgroundImage || '',
-          gradientFrom: settings.gradientFrom || '#000000',
-          gradientTo: settings.gradientTo || '#111111',
-          shopName: settings.shopName || 'HIDDEN SPINGFIELD',
-          bannerText: settings.bannerText || 'NOUVEAU DROP',
-          bannerSubtext: settings.bannerSubtext || 'Découvrez nos produits premium de qualité exceptionnelle',
-          bannerImage: settings.bannerImage || '',
-          bannerImageFit: settings.bannerImageFit || 'contain',
-          orderLink: settings.orderLink || ''
-        });
+        const result = await res.json();
+        console.log('✅ Réponse API:', result);
         alert('✅ Paramètres sauvegardés avec succès !');
+      } else {
+        const errorText = await res.text();
+        console.error('❌ Erreur API:', errorText);
+        alert('❌ Erreur lors de la sauvegarde: ' + errorText);
       }
     } catch (error) {
-      alert('❌ Erreur lors de la sauvegarde');
+      console.error('❌ Erreur catch:', error);
+      alert('❌ Erreur lors de la sauvegarde: ' + error);
     }
   };
 

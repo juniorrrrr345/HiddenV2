@@ -35,6 +35,7 @@ export async function PUT(request: NextRequest) {
     if (body.shop_title !== undefined) { fields.push('shop_title = ?'); values.push(body.shop_title); }
     if (body.background_image !== undefined) { fields.push('background_image = ?'); values.push(body.background_image); }
     if (body.banner_image !== undefined) { fields.push('banner_image = ?'); values.push(body.banner_image); }
+    if (body.banner_text !== undefined) { fields.push('banner_text = ?'); values.push(body.banner_text); }
     if (body.background_opacity !== undefined) { fields.push('background_opacity = ?'); values.push(body.background_opacity); }
     if (body.background_blur !== undefined) { fields.push('background_blur = ?'); values.push(body.background_blur); }
     if (body.info_content !== undefined) { fields.push('info_content = ?'); values.push(body.info_content); }
@@ -46,6 +47,8 @@ export async function PUT(request: NextRequest) {
     if (body.burns_link !== undefined) { fields.push('burns_link = ?'); values.push(body.burns_link); }
     if (body.apu_link !== undefined) { fields.push('apu_link = ?'); values.push(body.apu_link); }
     if (body.moe_link !== undefined) { fields.push('moe_link = ?'); values.push(body.moe_link); }
+    if (body.bannerImage !== undefined) { fields.push('banner_image = ?'); values.push(body.bannerImage); }
+    if (body.backgroundImage !== undefined) { fields.push('background_image = ?'); values.push(body.backgroundImage); }
     
     if (fields.length > 0) {
       values.push(1); // WHERE id = 1
