@@ -159,55 +159,59 @@ export default function ProductPage() {
               </div>
             )}
 
-            {/* Options de prix */}
-            {product.pricing && (
-              <div className="bg-gray-900 rounded-lg p-6">
-                <h3 className="text-xl font-bold mb-4">Options de prix</h3>
-                <div className="space-y-2">
+            {/* Prix et Options */}
+            <div className="bg-gray-900 rounded-lg p-6">
+              <h3 className="text-xl font-bold mb-4">Prix et Options</h3>
+              
+              {/* Prix de base */}
+              <div className="mb-6">
+                <div className="flex justify-between items-center p-4 bg-gray-800 rounded-lg mb-3">
+                  <span className="font-medium">Prix de base</span>
+                  <span className="text-green-400 font-bold text-xl">{product.price}€</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <button className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center">
+                      -
+                    </button>
+                    <span className="w-8 text-center">1</span>
+                    <button className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center">
+                      +
+                    </button>
+                  </div>
+                  <button className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-bold">
+                    AJOUTER
+                  </button>
+                </div>
+              </div>
+
+              {/* Options de prix additionnelles */}
+              {product.pricing && JSON.parse(product.pricing || '[]').length > 0 && (
+                <div className="space-y-3">
                   {JSON.parse(product.pricing || '[]').map((pricing: any, index: number) => (
-                    <div key={index} className="flex justify-between items-center p-3 bg-gray-800 rounded-lg">
-                      <span className="font-medium">{pricing.weight}</span>
-                      <span className="text-green-400 font-bold">{pricing.price}€</span>
+                    <div key={index}>
+                      <div className="flex justify-between items-center p-4 bg-gray-800 rounded-lg mb-3">
+                        <span className="font-medium">{pricing.weight}</span>
+                        <span className="text-green-400 font-bold text-xl">{pricing.price}€</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <button className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center">
+                            -
+                          </button>
+                          <span className="w-8 text-center">1</span>
+                          <button className="bg-gray-700 hover:bg-gray-600 w-8 h-8 rounded-full flex items-center justify-center">
+                            +
+                          </button>
+                        </div>
+                        <button className="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-bold">
+                          AJOUTER
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-
-            {/* Informations supplémentaires */}
-            <div className="bg-gray-900 rounded-lg p-6">
-              <h3 className="text-xl font-bold mb-4">Informations</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Catégorie</span>
-                  <span className="capitalize">{product.category}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Stock disponible</span>
-                  <span className={product.quantity > 0 ? 'text-green-400' : 'text-red-400'}>
-                    {product.quantity > 0 ? `${product.quantity} unités` : 'Rupture de stock'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-400">Disponibilité</span>
-                  <span className={product.available ? 'text-green-400' : 'text-red-400'}>
-                    {product.available ? 'Disponible' : 'Indisponible'}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Bouton de commande */}
-            <div className="sticky bottom-4">
-              <button 
-                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 py-4 rounded-lg font-bold text-lg transition-all"
-                disabled={!product.available || product.quantity === 0}
-              >
-                {product.available && product.quantity > 0 
-                  ? '🛒 Ajouter au panier' 
-                  : '❌ Indisponible'
-                }
-              </button>
+              )}
             </div>
           </div>
         </div>
