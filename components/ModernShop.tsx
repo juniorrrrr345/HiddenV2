@@ -12,6 +12,7 @@ import {
 
 import { useRouter } from 'next/navigation';
 import { useStore } from '@/lib/store';
+import ClientOnly from './ClientOnly';
 
 export default function ModernShop() {
   const router = useRouter();
@@ -36,30 +37,42 @@ export default function ModernShop() {
     { id: '2', name: 'Telegram', icon: 'telegram', emoji: '✈️', url: 'https://t.me/', enabled: true }
   ]);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     loadData();
     loadThemeSettings();
-    // Charger les réseaux sociaux depuis localStorage
-    const savedSocials = localStorage.getItem('shop-socials');
-    if (savedSocials) {
-      setSocials(JSON.parse(savedSocials));
+    // Charger les réseaux sociaux depuis localStorage (côté client uniquement)
+    if (typeof window !== 'undefined') {
+      const savedSocials = localStorage.getItem('shop-socials');
+      if (savedSocials) {
+        setSocials(JSON.parse(savedSocials));
+      }
     }
   }, []);
+
+  // Éviter les erreurs d'hydratation
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white text-xl">Chargement...</div>
+      </div>
+    );
+  }
 
   const loadData = async () => {
     try {
       setLoading(true);
-      
-      // Charger d'abord les produits statiques
-      const { products: staticProducts } = await import('@/lib/products');
-      setProducts(staticProducts.map(p => ({ ...p, _id: p.id, quantity: 50, available: true })));
       
       // Créer des catégories par défaut
       setCategories([
         { _id: '1', name: 'WEED', slug: 'weed', icon: '🌿' },
         { _id: '2', name: 'HASH', slug: 'hash', icon: '🍫' }
       ]);
+      
+      // Produits par défaut
+      setProducts([]);
       
       // Essayer de charger depuis l'API (optionnel)
       try {

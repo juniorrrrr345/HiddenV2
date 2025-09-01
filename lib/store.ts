@@ -130,9 +130,11 @@ export const useStore = create<StoreState>((set, get) => ({
       themeSettings: { ...state.themeSettings, ...newSettings }
     }));
     
-    // Sauvegarder dans localStorage
+    // Sauvegarder dans localStorage (côté client uniquement)
     const updatedSettings = { ...get().themeSettings, ...newSettings };
-    localStorage.setItem('theme-settings', JSON.stringify(updatedSettings));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme-settings', JSON.stringify(updatedSettings));
+    }
     
     // Sauvegarder aussi via l'API
     try {
@@ -148,13 +150,15 @@ export const useStore = create<StoreState>((set, get) => ({
 
   loadThemeSettings: async () => {
     try {
-      // Charger depuis localStorage en premier
-      const saved = localStorage.getItem('theme-settings');
-      if (saved) {
-        const parsedSettings = JSON.parse(saved);
-        set((state) => ({
-          themeSettings: { ...state.themeSettings, ...parsedSettings }
-        }));
+      // Charger depuis localStorage en premier (côté client uniquement)
+      if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem('theme-settings');
+        if (saved) {
+          const parsedSettings = JSON.parse(saved);
+          set((state) => ({
+            themeSettings: { ...state.themeSettings, ...parsedSettings }
+          }));
+        }
       }
       
       // Puis essayer de charger depuis l'API
@@ -176,7 +180,9 @@ export const useStore = create<StoreState>((set, get) => ({
         };
         
         set({ themeSettings });
-        localStorage.setItem('theme-settings', JSON.stringify(themeSettings));
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('theme-settings', JSON.stringify(themeSettings));
+        }
       }
     } catch (error) {
       console.error('Error loading theme settings:', error);
