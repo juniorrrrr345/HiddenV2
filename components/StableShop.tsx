@@ -9,11 +9,28 @@ export default function StableShop() {
   const [settings, setSettings] = useState<any>({ shopName: 'HIDDEN SPINGFIELD' });
   const [socials, setSocials] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     setMounted(true);
     loadData();
+    updateCartCount();
+    
+    // Écouter les mises à jour du panier
+    const handleCartUpdate = () => updateCartCount();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('cartUpdated', handleCartUpdate);
+      return () => window.removeEventListener('cartUpdated', handleCartUpdate);
+    }
   }, []);
+
+  const updateCartCount = () => {
+    if (typeof window !== 'undefined') {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const totalItems = cart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0);
+      setCartCount(totalItems);
+    }
+  };
 
   const loadData = async () => {
     try {
@@ -73,6 +90,11 @@ export default function StableShop() {
               <div className="flex items-center gap-1 sm:gap-2 bg-white/10 hover:bg-white/20 px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-full transition-all backdrop-blur">
                 <ShoppingBag size={16} className="sm:w-5 sm:h-5" />
                 <span className="hidden sm:inline font-medium text-sm">Panier</span>
+                {cartCount > 0 && (
+                  <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                    {cartCount}
+                  </span>
+                )}
               </div>
             </a>
           </div>

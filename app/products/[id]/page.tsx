@@ -11,12 +11,22 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
   const [showVideo, setShowVideo] = useState(false);
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     if (params.id) {
       loadProduct();
     }
+    updateCartCount();
   }, [params.id]);
+
+  const updateCartCount = () => {
+    if (typeof window !== 'undefined') {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const totalItems = cart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0);
+      setCartCount(totalItems);
+    }
+  };
 
   const loadProduct = async () => {
     try {
@@ -51,19 +61,27 @@ export default function ProductPage() {
   const addToCart = (productData: any, quantity: number, priceOption?: any) => {
     // Simulation d'ajout au panier
     const cartItem = {
-      ...productData,
+      id: productData.id,
+      name: productData.name,
+      price: priceOption ? priceOption.price : productData.price,
+      weight: priceOption ? priceOption.weight : 'base',
+      image: productData.image,
       quantity,
       selectedPrice: priceOption || { weight: 'base', price: productData.price }
     };
     
-    // Sauvegarder dans localStorage pour simulation
+    // Sauvegarder dans localStorage
     if (typeof window !== 'undefined') {
       const cart = JSON.parse(localStorage.getItem('cart') || '[]');
       cart.push(cartItem);
       localStorage.setItem('cart', JSON.stringify(cart));
+      
+      // Déclencher un événement pour mettre à jour le compteur
+      window.dispatchEvent(new Event('cartUpdated'));
     }
     
     alert(`✅ ${quantity}x ${productData.name} ajouté au panier !`);
+    updateCartCount();
   };
 
   if (loading) {
@@ -94,7 +112,7 @@ export default function ProductPage() {
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
       <header className="bg-gray-900 p-4 sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto flex items-center">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
           <button 
             onClick={() => router.push('/')}
             className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
@@ -102,6 +120,19 @@ export default function ProductPage() {
             <ArrowLeft className="w-5 h-5" />
             <span>Retour</span>
           </button>
+          
+          {/* Panier avec compteur */}
+          <a href="/cart" className="relative">
+            <div className="flex items-center gap-2 bg-white/10 hover:bg-white/20 px-3 py-2 rounded-full transition-all">
+              <span className="text-sm">🛒</span>
+              <span className="text-sm">Panier</span>
+              {cartCount > 0 && (
+                <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                  {cartCount}
+                </span>
+              )}
+            </div>
+          </a>
         </div>
       </header>
 
